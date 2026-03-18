@@ -1,1 +1,2 @@
 # Spring-Boot-demo
+- This is a repository I created to learn Spring Boot with Java as I explore how to integrate it with Web applications using the knowledge of OOP to apply the skills in future projects.
