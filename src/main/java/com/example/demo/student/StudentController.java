@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class StudentController {
 
 private final StudentService studentService;//Object
-//Constructor injection
+//Constructor injection / Dependency injection
 @Autowired
 public StudentController(StudentService studentService){
 this.studentService = studentService;
@@ -22,5 +24,10 @@ this.studentService = studentService;
 @GetMapping
 public List<Student> getStudents(){
     return studentService.getStudents();
+}
+
+@PostMapping
+public void registerStudent(@RequestBody Student student){
+    studentService.addStudent(student); //call service
 }
 }
