@@ -1,5 +1,8 @@
 package com.example.demo.student;
 import java.time.LocalDate;
+import java.time.Period;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,9 +22,11 @@ public class Student {
     private Long id;
     private String name;
     private String email;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")//Tells Jackson to expect date in this format from JSON
     private LocalDate dob;
 
-    @Transient
+    @Transient //calculate outside the database
     private Integer age;
 
     public Student(){
@@ -32,26 +37,22 @@ public class Student {
         Long id,
         String name,
         String email,
-        LocalDate dob,
-        Integer age
+        LocalDate dob
      ){
         this.id = id;
         this.name = name;
         this.email = email;
         this.dob = dob;
-        this.age = age;
 
     }
         public Student( 
         String name,
         String email,
-        LocalDate dob,
-        Integer age
+        LocalDate dob
      ){
         this.name = name;
         this.email = email;
         this.dob = dob;
-        this.age = age;
 }
     public Long getId(){
         return id;
@@ -78,7 +79,7 @@ public class Student {
         this.dob = dob;
     }
     public Integer getAge(){
-        return age;
+        return Period.between(dob, LocalDate.now()).getYears();
     }
     public void setAge(Integer age){
         this.age = age;
