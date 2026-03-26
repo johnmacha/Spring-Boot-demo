@@ -3,13 +3,16 @@ package com.example.demo.student;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.DeleteMapping;
 
 @RestController
 @RequestMapping(path = "api/v1/student")
@@ -29,13 +32,36 @@ public List<Student> getStudents(){
 }
 
 @PostMapping
-public void registerStudent(@RequestBody Student student){
+public ResponseEntity<?> registerStudent(@RequestBody Student student){
+    try{
     studentService.addStudent(student); //call service
+    return ResponseEntity.ok("Student added successfully");
+    }
+    catch (IllegalStateException e){
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+}
+
+@PutMapping(path="{id}")
+public void updateStudent(
+    @PathVariable("id") Long id,
+    @RequestParam(required = false) String name,
+    @RequestParam(required = false) String email
+){
+    studentService.updateStudent(id, name, email);
 }
 
 @DeleteMapping("{id}")
-public void deleteStudent(@PathVariable Long id){
-    studentService.deleteStudent(id);
+public ResponseEntity<?> deleteStudent(@PathVariable Long id){
+    try{
+        studentService.deleteStudent(id);
+        return ResponseEntity.ok("Deleted successfully");
+    }
+    catch(IllegalStateException e){
+        // e - is the exception you threw in the service
+        // getMessage() - returns the string you passed to it
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
 }
 
 }
